@@ -7,10 +7,12 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? '/swiss-care-pharmacy/' : '/',
-  server: {
-    host: "::",
-    port: 8080,
-  },
+server: {
+  host: "localhost",
+  port: 8080,
+  open: true,
+},
+
   build: {
     outDir: 'dist',
     sourcemap: false,
