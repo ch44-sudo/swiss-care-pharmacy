@@ -6,15 +6,32 @@ import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Plus, Upload, X, Camera, FileText, CheckCircle } from 'lucide-react';
 
+interface UploadedFile {
+  id: number;
+  file: File;
+  name: string;
+  size: number;
+  preview: string;
+}
+
+interface DetectedMedicine {
+  id: number;
+  name: string;
+  quantity: string;
+  editable: boolean;
+}
+
 const UploadPrescription = () => {
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [detectedMedicines, setDetectedMedicines] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [detectedMedicines, setDetectedMedicines] = useState<DetectedMedicine[]>([]);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (files) => {
-    const newFiles = Array.from(files).map((file, index) => ({
+  const handleFileUpload = (files: FileList | null) => {
+    if (!files) return;
+    
+    const newFiles = Array.from(files).map((file: File, index) => ({
       id: Date.now() + index,
       file,
       name: file.name,
@@ -27,7 +44,7 @@ const UploadPrescription = () => {
     // Simulate OCR processing
     setIsProcessing(true);
     setTimeout(() => {
-      const mockDetected = [
+      const mockDetected: DetectedMedicine[] = [
         { id: 1, name: 'Metformin 500mg', quantity: '30 tablets', editable: true },
         { id: 2, name: 'Lisinopril 10mg', quantity: '30 tablets', editable: true },
         { id: 3, name: 'Vitamin D3 2000 IU', quantity: '60 capsules', editable: true }
@@ -37,18 +54,22 @@ const UploadPrescription = () => {
     }, 2000);
   };
 
-  const removeFile = (fileId) => {
+  const removeFile = (fileId: number) => {
     setUploadedFiles(prev => prev.filter(file => file.id !== fileId));
   };
 
-  const updateMedicine = (id, field, value) => {
+  const updateMedicine = (id: number, field: keyof DetectedMedicine, value: string) => {
     setDetectedMedicines(prev =>
       prev.map(med => med.id === id ? { ...med, [field]: value } : med)
     );
   };
 
-  const removeMedicine = (id) => {
+  const removeMedicine = (id: number) => {
     setDetectedMedicines(prev => prev.filter(med => med.id !== id));
+  };
+
+  const handleTermsChange = (checked: boolean | "indeterminate") => {
+    setTermsAccepted(checked === true);
   };
 
   return (
@@ -205,7 +226,7 @@ const UploadPrescription = () => {
                   <Checkbox 
                     id="terms" 
                     checked={termsAccepted}
-                    onCheckedChange={setTermsAccepted}
+                    onCheckedChange={handleTermsChange}
                     className="mt-1"
                   />
                   <label htmlFor="terms" className="text-sm text-gray-700 leading-relaxed">
