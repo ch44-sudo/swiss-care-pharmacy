@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/' : '/',
+  base: mode === 'production' ? '/swiss-care-pharmacy/' : '/',
   server: {
     host: "::",
     port: 8080,
@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-checkbox', '@radix-ui/react-accordion']
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-checkbox']
         }
       }
     }
